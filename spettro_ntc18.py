@@ -322,6 +322,7 @@ class Step2(tk.Tk):
         ax.set_title("Spettro di Progetto NTC18", fontsize=18, pad=10)
         ax.grid(True)
         ax.set_xlim(0, 4)
+        ax.set_ylim(0, )
 
         # Ottimizzare il layout
         plt.tight_layout()
@@ -360,14 +361,23 @@ class Step2(tk.Tk):
         # --- salvataggio .txt T - Sd/g (per import Straus7) ---
         script_dir = os.path.dirname(os.path.abspath(__file__))
         txt_path = os.path.join(script_dir, "spettro_ntc18.txt")
-        data_out = np.column_stack([T, Sd_over_g])          # 2 colonne: T   Sd/g
+
+        # ordina per T e rimuove duplicati
+        arr = np.column_stack([T, Sd_over_g])
+        arr = arr[np.argsort(arr[:, 0], kind="mergesort")]
+        arr = arr[arr[:, 0] > 0.0]
+        arr = arr[np.concatenate(([True], np.diff(arr[:, 0]) > 0.0))]
+
+        if arr.size == 0:
+            raise ValueError("Spettro vuoto dopo pulizia.")
+
+        # salva con separatore SPAZIO, punto decimale, nessuna intestazione
         np.savetxt(
             txt_path,
-            data_out,
-            fmt="%.6f",                                     # 6 decimali
-            delimiter="\t",                                 # TAB-separato
-            header="T[s]\tSd/g[-]",                         # intestazione
-            comments=""                                     # niente '#'
+            arr,
+            fmt="%.6f",
+            delimiter=" ",   # spazio singolo
+            newline="\n"     # LF
         )
 
 
