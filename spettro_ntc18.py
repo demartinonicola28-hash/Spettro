@@ -288,7 +288,7 @@ class Step2(tk.Tk):
         q_lim = self.dati["q0"] * self.dati["KR"]
 
         # Griglia tempi e spettro elastico Se(T)
-        T = np.linspace(0.0, max(4.0, par["TD"] * 1.2), 2000)
+        T = np.linspace(0.0, max(4.0, par["TD"] * 1.2), 100)
         T[0] = max(T[1]*1e-6, 1e-9)  # evita T=0 esatto
         Se = se_elastico(T, ag, par["S"], F0, par["TB"], par["TC"], par["TD"], xi)
 
@@ -296,7 +296,7 @@ class Step2(tk.Tk):
         q_lim = self.dati["q0"] * self.dati["KR"]
 
         # Griglia tempi
-        T = np.linspace(0.0, max(4.0, par["TD"] * 1.2), 2000)
+        T = np.linspace(0.0, max(4.0, par["TD"] * 1.2), 100)
         T[0] = max(T[1]*1e-6, 1e-9)
 
         # Sd di progetto secondo le regole richieste
